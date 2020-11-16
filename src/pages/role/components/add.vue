@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="info.title" :visible.sync="info.isShow">
+    <el-dialog :title="info.title" :visible.sync="info.isShow" @closed='closed'>
       <el-form :model="form">
         <el-form-item label="角色名称" :label-width="width">
           <el-input v-model="form.rolename" autocomplete="off"></el-input>
@@ -12,11 +12,11 @@
             node-key="id"
             ref="tree"
             :default-expanded-keys="[2, 3]"
-            :default-checked-keys="[5]"
             :props="{ children: 'children', label: 'title' }"
           >
           </el-tree>
         </el-form-item>
+
         <el-form-item label="状态" :label-width="width">
           <el-switch
             v-model="form.status"
@@ -29,77 +29,107 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="info.isShow = false">取 消</el-button>
-        <el-button type="primary" @click="add" v-if="info.isAdd">添加</el-button>
-        <el-button type="primary" @click="updata" v-else>修改</el-button>
+        <el-button @click="hide">取 消</el-button>
+        <el-button type="primary" @click="add" v-if="info.isAdd"
+          >添 加</el-button
+        >
+        <el-button type="primary" @click="update(form)" v-else>修改</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
+
 <script>
-import { reqRoleAdd,reqRoleOne,reqRoleEdit} from "../../../util/request";
-import {mapGetters,mapActions} from 'vuex'
+import { mapGetters, mapActions } from "vuex";
+import { reqRoleAdd, reqRoleOne, reqRoleEdit } from "../../../util/request";
+import { confirm, cancel } from "../../../util/alert";
+
 export default {
-    computed: {
-        ...mapGetters({
-            list:'menu/list'
-        })
-    },
   props: ["info"],
-  components: {},
   data() {
     return {
-      width: "130px",
+      isShow: true,
       form: {
         rolename: "",
         menus: [],
         status: 1,
       },
-     
+      width: "120px",
     };
   },
+  computed: {
+    ...mapGetters({
+      list: "menu/getList",
+      getRoleList: "role/getRoleList",
+    }),
+  },
+  watch: {},
   methods: {
-    // 关闭弹出
     hide() {
       this.info.isShow = false;
     },
-    //添加数据到数据库
+    empty() {
+      this.form = {
+        rolename: "",
+        menus: [],
+        status: 1,
+      }
+    },
+    closed() {
+         this.empty();
+         this.$refs.tree.setCheckedKeys([], false);
+    },
+    // 添加
     add() {
-      // 由于要的menus是字符串数组，所以需要把数据通过stringify转为字符串
       this.form.menus = JSON.stringify(this.$refs.tree.getCheckedKeys());
-      // console.log(this.$refs.tree.getCheckedKeys())
-      console.log(this.form);
       reqRoleAdd(this.form).then((res) => {
-            this.reqRoleList()
-            this.hide()
-
+        this.hide();
+        this.empty();
+        this.roleList();
+        confirm(res.data.msg);
       });
     },
     ...mapActions({
-        reqMenuList:'menu/reqMenuList',
-        reqRoleList:'role/reqRoleList'
+      menuList: "menu/menuList",
+      roleList: "role/roleList",
     }),
-    // 获取一条数据的方法
-    look(id){
-        reqRoleOne({id:id}).then(res=>{
-            this.form = res.data.list
-        this.form.menus =  this.$refs.tree.setCheckedKeys(JSON.parse(res.data.list.menus))
-        this.form.id=id
-        })
+    // 获取修改的那条数据
+    look(id) {
+      reqRoleOne({ id: id }).then((res) => {
+        this.form = res.data.list;
+        this.form.menus = this.$refs.tree.setCheckedKeys(
+          JSON.parse(res.data.list.menus)
+        );
+        this.form.id = id;
+      });
     },
-    // 数据更改
-    updata(form){
-        this.form.menus = JSON.stringify(this.$refs.tree.getCheckedKeys());
-        reqRoleEdit(this.form).then(res=>{
-            this.hide()
-            this.reqRoleList()
+    // 修改
+    update() {
+      this.$confirm("此操作将修改数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.form.menus = JSON.stringify(this.$refs.tree.getCheckedKeys());
+          // 修改操作
+          reqRoleEdit(this.form).then((res) => {
+            this.hide();
+            this.roleList();
+            this.empty();
+            confirm(res.data.msg);
+          });
         })
-    }
+        .catch((err) => {
+          cancel(err.data.msg);
+        });
+    },
   },
   mounted() {
-      this.reqMenuList()
+    this.menuList();
   },
 };
 </script>
-<style scoped>
+
+<style lang='' scoped>
 </style>

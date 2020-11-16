@@ -1,50 +1,52 @@
 <template>
-<div>
-      <!-- <v-slot>
-        <slot >我是父组件的slot</slot>
-        <slot slot-scope="data">我是父组件从子组件slot拿来的数据{{data}}</slot>
-    </v-slot> -->
-    <el-button type="primary" @click="willAdd">添加</el-button >
+  <div>
+    <el-button type='primary' @click="willAdd">添加</el-button>
+    <v-add :info='info' ref="one"></v-add>
     <v-list @edit='edit($event)'></v-list>
-    <v-add :info='info' ref='one'></v-add>
-</div>
+  </div>
 </template>
+
 <script>
-import vList from './components/list'
-import vAdd from './components/add'
-import vSlot from './components/slot'
+import vAdd from "./components/add";
+import vList from "./components/list";
+
 export default {
-components:{
-    vList,
-    vAdd,
-    vSlot
- },
-data () {
- return {
-     data:'123',
-     info:{
-         isShow:false,
-         isAdd:true //显示添加按钮
-     }
- }
-},
-methods:{
-    // 点击添加出弹出框
-    willAdd(){
-        this.info.isShow = !this.info.isShow
-        this.info.isAdd =  true
-    },
-    //编辑
-    edit(e){
-        console.log(e);  //此时获取的是每一条数据的id
-        this.info.isShow = true,
-        this.info.isAdd = false
-        this.$refs.one.look(e)
-    }
-},
-mounted(){
-}
-}
+  components: {
+      vAdd,
+      vList
+  },
+  data() {
+    return {
+        info: {
+            isShow: false,
+            isAdd: true,
+            title: '用户添加'
+        }
+    };
+  },
+  computed: {},
+  watch: {},
+  methods: {
+      willAdd() {
+          this.info = {
+            isShow: true,
+            isAdd: true,
+            title: '菜单添加'
+          }
+      },
+      // 修改
+      edit(e) {
+        //   console.log(e);
+           this.info = {
+            isShow: true,
+            isAdd: false,
+            title: '菜单修改'
+          }
+          this.$refs.one.look(e);
+      }
+  },
+};
 </script>
-<style scoped>
+
+<style lang='' scoped>
 </style>

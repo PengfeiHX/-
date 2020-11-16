@@ -1,25 +1,26 @@
-import {reqMenuList} from '../../util/request'
+import {reqSeckillList} from '../../util/request'
 
 const state = {
     list: []
 }
 
 const mutations = {
-    getMenu (state, arr) {
+    getSeckill (state, arr) {
         state.list = arr;
     }
 }
 
 const actions = {
-    menuList(context) {
-        reqMenuList({istree: true}).then(res => {
-            context.commit('getMenu', res.data.list)
+    seckillList(context) {
+        reqSeckillList().then(res => {
+            console.log(res);
+            context.commit('getSeckill', res.data.list)
         })
     }
 }
 
 const getters = {
-    getList(state) {
+    getSeckillList(state) {
         return state.list
     }
 }

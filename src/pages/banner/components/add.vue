@@ -2,20 +2,26 @@
   <div>
     <el-dialog :title="info.title" :visible.sync="info.isShow" @closed='closed'>
       <el-form :model="form">
-        <el-form-item label="上级分类" :label-width="width">
-          <el-select v-model="form.pid">
-            <el-option label="请选择" :value="0"></el-option>
-            <!-- 循环添加的数据 -->
-            <el-option :label="item.catename" :value="item.id" v-for="item in list" :key="item.id"></el-option>
-          </el-select>
+        
+        <el-form-item label="标题" :label-width="width">
+          <el-input v-model="form.title" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="分类名称" :label-width="width">
-          <el-input v-model="form.catename" autocomplete="off"></el-input>
-        </el-form-item>
+
         <el-form-item label="图片" :label-width="width">
+          <!-- <el-upload
+            action="#"
+            multiple
+            list-type="picture-card"
+            :on-change="changeImg">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="imageUrl" alt="">
+          </el-dialog> -->
            <el-upload
             class="avatar-uploader"
             action="#"
+            multiple
             :on-change="changeImg">
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -36,8 +42,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="hide">取 消</el-button>
         <el-button type="primary" @click="add" v-if="info.isAdd"
-          >添 加</el-button
-        >
+          >添 加</el-button>
         <el-button type="primary" @click="update(form)" v-else>修改</el-button>
       </div>
     </el-dialog>
@@ -48,16 +53,16 @@
 
 import { mapGetters, mapActions } from "vuex";
 import { confirm, cancel } from "../../../util/alert";
-import {reqClassifyAdd, reqClassifyOne, reqClassifyEdit} from '../../../util/request';
+import {reqBannerAdd, reqBannerOne, reqBannerEdit} from '../../../util/request';
 
 export default {
   props: ["info"],
   data() {
     return {
+      dialogVisible: true,
       isShow: true,
       form: {
-        pid: 0,
-        catename: "",
+        title: "",
         img: null,
         status: 1,
       },
@@ -67,7 +72,7 @@ export default {
   },
   computed: {
      ...mapGetters({
-          list: 'classify/getClassifyList'
+          list: 'banner/getBannerList'
       }),
   },
   watch: {},
@@ -79,8 +84,7 @@ export default {
     // 表单置空
     empty() {
       this.form = {
-        pid: 0,
-        catename: "",
+        title: "",
         img: null,
         status: 1,
       };
@@ -97,20 +101,20 @@ export default {
     },
     // 添加按钮
     add() {
-      reqClassifyAdd(this.form).then(res => {
+      reqBannerAdd(this.form).then(res => {
         this.hide();
-        this.classifyList();
+        this.bannerList();
         this.empty();
         this.imageUrl = '';
         confirm(res.data.msg);
       })
     },
     ...mapActions({
-      classifyList: 'classify/classifyList'
+      bannerList: 'banner/bannerList'
     }),
     // 获取某一条数据
     look(id) {
-      reqClassifyOne({id: id}).then(res => {
+      reqBannerOne({id: id}).then(res => {
         this.form = res.data.list;
         this.form.id = id;
         this.imageUrl = this.$preImg+res.data.list.img;
@@ -125,8 +129,8 @@ export default {
       })
         .then(() => {
           // 修改操作
-          reqClassifyEdit(this.form).then(res => {
-            this.classifyList();
+          reqBannerEdit(this.form).then(res => {
+            this.bannerList();
             this.hide();
             this.empty();
             this.imageUrl = '';
@@ -168,4 +172,5 @@ export default {
     height: 178px;
     display: block;
   }
+
 </style>

@@ -1,25 +1,25 @@
-import {reqMenuList} from '../../util/request'
+import {reqBannerList} from '../../util/request'
 
 const state = {
     list: []
 }
 
 const mutations = {
-    getMenu (state, arr) {
+    getBanner (state, arr) {
         state.list = arr;
     }
 }
 
 const actions = {
-    menuList(context) {
-        reqMenuList({istree: true}).then(res => {
-            context.commit('getMenu', res.data.list)
+    bannerList(context) {
+        reqBannerList({istree: true}).then(res => {
+            context.commit('getBanner', res.data.list)
         })
     }
 }
 
 const getters = {
-    getList(state) {
+    getBannerList(state) {
         return state.list
     }
 }

@@ -1,4 +1,4 @@
-import {reqGoodsList, reqGoodsCount} from '../../util/request'
+import {reqManagerList, reqManagerCount} from '../../util/request'
 
 const state = {
     list: [],
@@ -8,48 +8,48 @@ const state = {
 }
 
 const mutations = {
-    getGoods(state, arr) {
+    getManager(state, arr) {
         state.list = arr;
     },
-    getGoodsTotal(state, page) {
+    getTotal(state, page) {
         state.total = page;
     },
-    getGoodsPage(state, page) {
+    getPage(state, page) {
         state.page = page;
     }
 }
 
 const actions = {
-    goodsList(context) {
-        reqGoodsList({
+    managerList(context) {
+        reqManagerList({
             size: context.state.size,
             page: context.state.page
         }).then(res => {
             // console.log(res);
-            context.commit('getGoods', res.data.list)
+            context.commit('getManager', res.data.list)
         })
     },
     // 请求总数
-    goodsCount(context) {
-        reqGoodsCount().then(res => {
-            context.commit('getGoodsTotal', res.data.list[0].total)
+    managerCount(context) {
+        reqManagerCount().then(res => {
+            context.commit('getTotal', res.data.list[0].total)
         })
     },
     // 改变当前页
-    goodsCurrentPage(context, page) {
-        context.commit('getGoodsPage', page);
-        context.dispatch('goodsList');
+    getCurrentPage(context, page) {
+        context.commit('getPage', page);
+        context.dispatch('managerList');
     }
 }
 
 const getters = {
-    getGoodsList(state) {
+    getManagerList(state) {
         return state.list;
     },
-    GoodsTotalPages(state) {
+    getTotalPages(state) {
         return state.total;
     },
-    GoodsPage(state) {
+    getPage(state) {
         return state.page;
     }
 }

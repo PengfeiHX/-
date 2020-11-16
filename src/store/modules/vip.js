@@ -1,25 +1,25 @@
-import {reqMenuList} from '../../util/request'
+import {reqVipList} from '../../util/request'
 
 const state = {
     list: []
 }
 
 const mutations = {
-    getMenu (state, arr) {
+    getVip (state, arr) {
         state.list = arr;
     }
 }
 
 const actions = {
-    menuList(context) {
-        reqMenuList({istree: true}).then(res => {
-            context.commit('getMenu', res.data.list)
+    vipList(context) {
+        reqVipList({istree: true}).then(res => {
+            context.commit('getVip', res.data.list)
         })
     }
 }
 
 const getters = {
-    getList(state) {
+    getVipList(state) {
         return state.list
     }
 }

@@ -1,12 +1,14 @@
-*{
+* {
     margin: 0;
     padding: 0;
-    list-style: none;
 }
-input,textarea,button{
-    outline: none;
-}
-a{
+a {
     text-decoration: none;
-    color: #333333;
+    color: #333;
+}
+input, 
+button,
+select {
+    outline: none;
+    box-sizing: content-box;
 }

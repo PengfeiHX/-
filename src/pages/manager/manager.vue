@@ -20,7 +20,7 @@ export default {
         info: {
             isShow: false,
             isAdd: true,
-            title: '轮播图添加'
+            title: '用户添加'
         }
     };
   },
@@ -31,7 +31,7 @@ export default {
           this.info = {
             isShow: true,
             isAdd: true,
-            title: '轮播图添加'
+            title: '用户添加'
           }
       },
       // 修改
@@ -40,7 +40,7 @@ export default {
            this.info = {
             isShow: true,
             isAdd: false,
-            title: '轮播图修改'
+            title: '用户修改'
           }
           this.$refs.one.look(e);
       }

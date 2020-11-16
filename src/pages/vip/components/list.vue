@@ -8,22 +8,18 @@
     default-expand-all
     :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
     <el-table-column
-      prop="id"
-      label="菜单编号"
+      prop="uid"
+      label="用户编号"
       width="180">
     </el-table-column>
     <el-table-column
-      prop="title"
-      label="菜单名称"
+      prop="nickname"
+      label="昵称"
       width="180">
     </el-table-column>
     <el-table-column
-      prop="icon"
-      label="菜单图标">
-    </el-table-column>
-    <el-table-column
-      prop="url"
-      label="菜单地址">
+      prop="phone"
+      label="手机号">
     </el-table-column>
     <el-table-column
       prop="status"
@@ -44,8 +40,7 @@
       label="操作">
       <template slot-scope="scope">
           <div>
-              <el-button type='primary' @click="update(scope.row.id)">修改</el-button>
-              <el-button type='danger' @click="del(scope.row.id)">删除</el-button>
+              <el-button type='primary' @click="update(scope.row.uid)">修改</el-button>
           </div>
       </template>
     </el-table-column>
@@ -55,7 +50,6 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
-import {reqMenuDel} from '../../../util/request'
 import {confirm, cancel} from '../../../util/alert'
 
 export default {
@@ -66,7 +60,7 @@ export default {
  },
  computed:{
      ...mapGetters({
-          list: 'menu/getList'
+          list: 'vip/getVipList'
       }),
      
  },
@@ -74,31 +68,15 @@ export default {
  },
  methods: {
      ...mapActions({
-         menuList: 'menu/menuList'
+         vipList: 'vip/vipList'
      }),
-      // 删除
-      del(id) {
-        // console.log(id);
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          // 删除操作
-          reqMenuDel({id:id}).then(res => {
-              this.menuList();
-              confirm(res.data.msg);
-          })
-        })
-
-      },
       // 更新
       update(id) {
           this.$emit('edit', id)
       }
  },
  mounted() {
-     this.menuList()
+     this.vipList()
  }
 };
 </script>

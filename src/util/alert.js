@@ -1,17 +1,23 @@
 import Vue from 'vue'
-let vm = new Vue();
+let vm = new Vue()
 
-
-export const alertSuccess=(msg)=>{
+export const confirm = (msg) => {
     vm.$message({
-        message: msg,
-        type: 'success'
+        type: 'success',
+        message: msg
       });
 }
 
-export const alertwarning=(msg)=>{
+export const cancel = (msg) => {
     vm.$message({
-        message: msg,
-        type: 'warning'
+        type: 'info',
+        message: msg
       });
+}
+
+export const warning = (msg) => {
+  vm.$message({
+    type: 'warning',
+    message: msg
+  });
 }

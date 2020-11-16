@@ -8,22 +8,9 @@
     default-expand-all
     :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
     <el-table-column
-      prop="id"
-      label="菜单编号"
-      width="180">
-    </el-table-column>
-    <el-table-column
       prop="title"
-      label="菜单名称"
+      label="活动名称"
       width="180">
-    </el-table-column>
-    <el-table-column
-      prop="icon"
-      label="菜单图标">
-    </el-table-column>
-    <el-table-column
-      prop="url"
-      label="菜单地址">
     </el-table-column>
     <el-table-column
       prop="status"
@@ -55,7 +42,7 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
-import {reqMenuDel} from '../../../util/request'
+import {reqSeckillDel} from '../../../util/request'
 import {confirm, cancel} from '../../../util/alert'
 
 export default {
@@ -66,7 +53,7 @@ export default {
  },
  computed:{
      ...mapGetters({
-          list: 'menu/getList'
+          list: 'seckill/getSeckillList'
       }),
      
  },
@@ -74,7 +61,7 @@ export default {
  },
  methods: {
      ...mapActions({
-         menuList: 'menu/menuList'
+         seckillList: 'seckill/seckillList'
      }),
       // 删除
       del(id) {
@@ -85,8 +72,8 @@ export default {
           type: 'warning'
         }).then(() => {
           // 删除操作
-          reqMenuDel({id:id}).then(res => {
-              this.menuList();
+          reqSeckillDel({id:id}).then(res => {
+              this.seckillList();
               confirm(res.data.msg);
           })
         })
@@ -98,7 +85,7 @@ export default {
       }
  },
  mounted() {
-     this.menuList()
+     this.seckillList()
  }
 };
 </script>

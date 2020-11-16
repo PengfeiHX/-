@@ -8,15 +8,11 @@
       default-expand-all
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
-      <el-table-column prop="id" label="规格编号" width="120">
+      <el-table-column prop="id" label="用户编号" width="120">
       </el-table-column>
-      <el-table-column prop="specsname" label="规格名称" width="180">
+      <el-table-column prop="username" label="用户名" width="180">
       </el-table-column>
-      <el-table-column label="规格属性" width="180">
-        <template slot-scope="scope">
-            <el-tag type="success" v-for='item in scope.row.attrs' :key='item'>{{item}}</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column prop="rolename" label="所属角色"> </el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <div>
@@ -34,8 +30,8 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <div>
-            <el-button type="primary" @click="update(scope.row.id)">修改</el-button>
-            <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
+            <el-button type="primary" @click="update(scope.row.uid)">修改</el-button>
+            <el-button type="danger" @click="del(scope.row.uid)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -48,7 +44,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { confirm, cancel } from "../../../util/alert";
-import {reqSpecDel} from '../../../util/request'
+import {reqManagerDel} from '../../../util/request'
 
 export default {
   data() {
@@ -58,17 +54,17 @@ export default {
   },
   computed: {
     ...mapGetters({
-      list: "spec/getSpecList",
-      total: 'spec/specTotalPages',
-      page: 'spec/specPage'
+      list: "manager/getManagerList",
+      total: 'manager/getTotalPages',
+      page: 'manager/getPage'
     }),
   },
   watch: {},
   methods: {
     ...mapActions({
-      specList: "spec/specList",
-      specCount: 'spec/specCount',
-      specCurrentPage: 'spec/specCurrentPage'
+      managerList: "manager/managerList",
+      managerCount: 'manager/managerCount',
+      currentPage: 'manager/getCurrentPage'
     }),
     // 删除
     del(id) {
@@ -80,11 +76,13 @@ export default {
       })
         .then(() => {
           // 删除操作
-          reqSpecDel({id: id}).then(res => {
-            this.specList();
-            this.specCount();
-            this.specCurrentPage(1);
+          reqManagerDel({uid: id}).then(res => {
+            this.managerCount();
+            this.managerList();
             confirm(res.data.msg);
+            // this.managerList();
+            this.currentPage(1);
+
           })
         })
     },
@@ -93,14 +91,13 @@ export default {
       this.$emit("edit", id);
     },
     handleCurrentChange(p) {
-      this.specCurrentPage(p);
-
+      this.currentPage(p);
     }
   },
   mounted() {
-    this.specList();
-    this.specCount();
-    this.specCurrentPage(1);
+    this.managerList();
+    this.managerCount();
+    this.currentPage(1);
   },
 };
 </script>

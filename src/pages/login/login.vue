@@ -1,81 +1,92 @@
 <template>
-  <div class="login">
-    <div class="con">
-      <h2>登录</h2>
-      <div>
-        <input type="text" v-model="user.username"/>
-      </div>
-      <div>
-        <input type="text" v-model="user.password"/>
-      </div>
-      <div><button @click="login">登录</button></div>
-    </div>
-  </div>
+ <div class="login">
+     <div class="con">
+         <h2>登录</h2>
+         <div>
+             <input type="text" v-model="user.username">
+         </div>
+         <div>
+             <input type="password" v-model="user.password">
+         </div>
+         <div>
+             <input type="button" value="登录" @click="login">
+         </div>
+     </div>
+ </div>
 </template>
+
 <script>
-import {reqUserLogin} from '../../util/request'
-import {mapActions,mapGetters}  from 'vuex'
+import {userLogin} from '../../util/request'
+import {mapGetters, mapMutations} from 'vuex'
 export default {
-  components: {},
-  data() {
-    return {
-      user:{
-        username:'',
-        password:'',
-      }
-    };
-  },
-  methods: {
-    ...mapActions({
-      requsetUserLogin:'user/requsetUserLogin',
-    }),
-    // 登录
-    login(){
-          reqUserLogin(this.user).then(res=>{
-             console.log(res.data.list);
-             
-              this.requsetUserLogin(res.data.list)
-               this.$router.push('/index')
-          })
-    }
-  },
-  mounted() {},
+ data() {
+ return {
+     user: {
+         username: '',
+         password: ''
+     }
+ };
+ },
+ computed:{
+ },
+ watch:{
+ },
+ methods: {
+     ...mapMutations({
+         getUser: 'user/getUser'
+     }),
+     login() {
+         userLogin(this.user).then(res => {
+             console.log(res);
+            this.getUser(res.data.list);
+            this.$router.push('/index');
+         })  
+         
+     }
+ },
 };
 </script>
-<style scoped>
-.login{
+
+<style lang='' scoped>
+.login {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(to right,#553443,#303D60);
+    background: linear-gradient(to right, #6e1d6f,#1f1f4c);
 }
-.con{
-    position: relative;;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    width: 360px;
+.con {
+    width: 428px;
     height: 260px;
-    background: #fff;
-    border-radius: 10px;
     text-align: center;
-    overflow: hidden;
-} 
-.con h2{
-    margin: 30px;
+    background: white;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
-.con input{
-    margin-bottom:20px;
-    width: 60%;
-    height: 30px;
-     font-size: 24px;
-
+h2 {
+    margin-top: 30px;
 }
-.con button{
-    width: 60%;
-    background: #409EFF;
-    height: 30px;
-    border: none;
-    color: #fff;
-     font-size: 20px;
+.con div {
+    margin-top: 15px;
+}
+input {
+    width: 272px;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+input[type='text'],
+input[type='password'] {
+    text-indent: 1em;
+}
+::-webkit-input-placeholder {
+    color: #aaa;
+    font-size: 20px;
+}
+input[type='button'] {
+    background: #409eff;
+    color: white;
+    border: 1px solid #409eff;
 }
 </style>
